@@ -28,7 +28,7 @@ namespace web_api_application.Helpers.data
                 Id wordt niet meegegeven, deze wordt door de web-api's database zelf geregeld
                 */
 
-                Log newLog = new Log() { titel = log.titel, auteur = log.auteur, gemaakt = DateTime.Now, verhaal = log.verhaal, verwijderd = false };
+                Log newLog = new Log() { titel = log.titel, auteur = log.auteur, gemaakt = DateTime.Now, verhaal = log.verhaal, verwijderd = false }; /*newlog wordt gevult met data van de gebruiker en vaste waarde*/
                 var response = client.PostAsJsonAsync("api/logs/", newLog).Result; /*Post wordt gedaan naar de web-api*/
                 if (response.IsSuccessStatusCode == true) /*in de header staat of het result goed is - als de return code goed is zal hij het eerste gedeelte uitvoeren*/
                 {

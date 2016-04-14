@@ -23,6 +23,7 @@ namespace web_api_application
 
         private void dataOphalenButton_Click(object sender, EventArgs e)
         {
+            ComboGet.Items.Clear();
             GetData.receiveData();
             foreach (var log in GetData.logs)
             {
@@ -59,61 +60,6 @@ namespace web_api_application
             }
         }
 
-        private void dataVeranderenButton_Click(object sender, EventArgs e)
-        {
-            if (PutID.Text != "")/*Controleerd of id is ingevoerd*/
-            {
-                List<Log> log = new List<Log>(); /*nieuwe lijst wordt aangemaakt*/
-                int id = int.Parse(PutID.Text); /*string PutID wordt naar int omgezet voor de add*/
-                log.Add(new Log() {Id = id, auteur = PutAuteur.Text, titel = PutTitel.Text, verhaal = PutVerhaal.Text }); /*nieuw log wordt gemaakt*/
-                bool changed = PutData.Put(log[0]); /*voert de put funtie uit en krijgt true of false terug*/
-                if (changed == true) /*true wordt teruggeven als de data is veranderd in de web-api*/
-                {
-                    MessageBox.Show("De gegvens zijn bijgewerkt");
-
-                    /*Text velden worden weer leeggemaakt voor volgende put*/
-                    PutID.Text = "";
-                    PutAuteur.Text = "";
-                    PutTitel.Text = "";
-                    PutVerhaal.Text = "";
-                }
-                else
-                {
-                    MessageBox.Show("Er is een fout opgetreden bij het wegschrijven van de gegevens");
-
-                }
-            }
-            else
-            {
-                MessageBox.Show("U heeft sommige velden niet ingevuld, vul deze alsnog in");
-            }
-        }
-
-        private void dataDeleteButton_Click(object sender, EventArgs e)
-        {
-            if (DeleteID.Text != "")/*Controleerd of id is ingevoerd*/
-            {
-                int id = int.Parse(DeleteID.Text); /*string deleteID wordt naar int omgezet voor de add*/
-                bool changed = DeleteDatacs.Delete(id); /*voert de delete funtie uit en krijgt true of false terug*/
-                if (changed == true) /*true wordt teruggeven als de data is veranderd in de web-api*/
-                {
-                    MessageBox.Show("De log is verwijderd");
-
-                    /*Text velden worden weer leeggemaakt voor volgende put*/
-                    DeleteID.Text = "";
-                }
-                else
-                {
-                    MessageBox.Show("Er is een fout opgetreden bij het wegschrijven van de gegevens");
-                }
-            }
-            else
-            {
-                MessageBox.Show("U heeft sommige velden niet ingevuld, vul deze alsnog in");
-            }
-
-        }
-
         private void CombGet_SelectedIndexChanged(object sender, EventArgs e)
         {
             int nummer = ComboGet.SelectedIndex;
@@ -123,6 +69,52 @@ namespace web_api_application
             GetDate.Text = Logs[nummer].gemaakt.ToString();
             GetVerhaal.Text = Logs[nummer].verhaal;
             GetVerwijderd.Text = Logs[nummer].verwijderd.ToString();
+        }
+
+        private void verwijderLogButton_Click(object sender, EventArgs e) 
+        {           
+            if (GetID.Text != null) // functie werkt alleen als er een log is gekozen
+            {
+                DialogResult dr = MessageBox.Show("Weet u zeker dat u log "+ GetID.Text+ " wilt verwijderen","test",MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information); // gebruiker wordt gevraagt om bevestiging
+                if (dr == DialogResult.Yes) // log wordt verwijderd als de gebruiker op 'Yes' heeft geklikt
+                {
+                    var actie = DeleteDatacs.Delete(int.Parse(GetID.Text)); // log wordt verwijderd via de delete helper
+                }
+                else // als de gebruiker de negatief op de messagebox heeft gereageerd 
+                {
+                    MessageBox.Show("U heeft de actie geannuleerd "); // mbox om de gebruiker te laten dat de het log niet wordt verwijderd
+                }
+            }
+            else // GetID is leeg
+            {
+                MessageBox.Show("ID veld is leeg, Selecteer een log"); // de gebruiker laten weten dat id veld leeg is
+            }
+        }
+
+        private void LogAanpassenButton_Click(object sender, EventArgs e)
+        {
+            if (GetID.Text != "" && GetTitel.Text != "" && GetAuteur.Text != "" && GetVerhaal.Text != "") // functie werkt alleen als alle velden zijn ingevult
+            {
+                Log log = new Log { Id = int.Parse(GetID.Text), titel = GetTitel.Text, auteur = GetAuteur.Text, gemaakt = DateTime.Parse(GetDate.Text), verhaal = GetVerhaal.Text, verwijderd = Convert.ToBoolean(GetVerwijderd.Text) };
+                var actie = PutData.Put(log); //de data wordt veranderd doormiddel van put helper 
+                if (actie == true)
+                {
+                    MessageBox.Show("log is gewijzigd"); // gebruiker weet nu dat het gewijzigd is
+                }
+                else
+                {
+                    MessageBox.Show("er is een fout opgetreden bij het veranderen van het log");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Niet alle waarden zijn ingevult"); // alle waarden moeten ingevult zijn
+            }
+        }
+
+        private void OpenMapButton_Click(object sender, EventArgs e)
+        {
+            var test = new FolderBrowserDialog();
         }
     }
 }

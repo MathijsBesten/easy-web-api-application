@@ -63,6 +63,7 @@
     <Compile Include="Helpers\data\DeleteDatacs.cs" />
     <Compile Include="Helpers\data\GetData.cs" />
     <Compile Include="Helpers\data\Log.cs" />
+    <Compile Include="Helpers\data\logReceive.cs" />
     <Compile Include="Helpers\data\PostData.cs" />
     <Compile Include="Helpers\data\PutData.cs" />
     <Compile Include="Program.cs" />
